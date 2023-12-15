@@ -3,7 +3,8 @@ let rowProduct = document.querySelector(".row-product");
 let paginationContainer = document.querySelector(".pagination");
 let itemsPerPage = 12; // Number of items to display per page
 let currentPage = 1;
-
+let form = document.querySelector("form");
+let search = document.querySelector(".search")
 // Get data from the API
 let getData = async (url) => {
   let response = await axios.get(url);
@@ -56,3 +57,41 @@ let changePage = (newPage) => {
 
 // Initial data loading
 getData(API_URL).then(showData);
+
+// tìm kiếm
+
+// Thêm sự kiện lắng nghe khi người dùng nhấn phím trên trường tìm kiếm
+search.addEventListener('keydown',(event)=> {
+  if (event.key === 'Enter') {
+      event.preventDefault(); // Ngăn chặn hành động mặc định của phím Enter 
+      performSearch();
+
+  }
+});
+
+// Thêm sự kiện lắng nghe khi người dùng nhấn nút tìm kiếm
+form.addEventListener('submit',(event)=> {
+  event.preventDefault(); // Ngăn chặn hành động mặc định của việc submit form
+  performSearch();
+});
+
+// Hàm thực hiện tìm kiếm
+function performSearch() {
+  let searchTerm = search.value.trim().toLowerCase();
+//console.log(searchTerm);
+  // Gọi hàm để thực hiện tìm kiếm dựa trên searchTerm và hiển thị kết quả
+  // ...
+
+  // Cập nhật lại dữ liệu và phân trang nếu cần thiết
+  getData(API_URL).then(data => {
+      // Thực hiện tìm kiếm và hiển thị kết quả
+      let filteredData = data.filter(product => product.name.toLowerCase().includes(searchTerm));
+      showData(filteredData);
+console.log(filteredData);
+      // Cập nhật lại phân trang
+      renderPagination(filteredData.length);
+  });
+}
+
+// ... (code tiếp theo)
+
